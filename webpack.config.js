@@ -37,7 +37,7 @@ var webappHtmlWebpackPlugin = new HtmlWebpackPlugin({
 //     names: ["globe", "runtime"]
 // });
 
-var buildFolder = "buildOutput";
+var buildFolder = "server/public";
 
 var PRODUCTION = process.env.NODE_ENV === 'production';
 
@@ -53,6 +53,9 @@ module.exports = {
     output: {
         path: path.resolve(__dirname, buildFolder),
         filename: "[name].[chunkhash].js",
+        library: 'WebGlobe',
+        libraryTarget: 'umd',
+        umdNamedDefine: true,
         // publicPath: buildFolder + "/",
         devtoolModuleFilenameTemplate: 'webpack:///[absolute-resource-path]'
     },

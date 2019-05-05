@@ -1,11 +1,12 @@
 ﻿import Kernel from './world/Kernel';
 import Globe, {GlobeOptions} from './world/Globe';
-import './index.scss';
+//import './index.scss';
 // declare function require(name: string): any;
 // const template = require('./template.html');
 // console.log(template);
 
-(function () {
+export {Globe, GlobeOptions, Kernel}
+/*(function () {
     var options = new GlobeOptions();
     options.satellite = true;
     options.level = 3;
@@ -22,4 +23,4 @@ import './index.scss';
     window.addEventListener("resize", resize, false);
 
     resize();
-})();
+})();*/
