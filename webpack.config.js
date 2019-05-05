@@ -15,21 +15,21 @@ var HtmlWebpackPlugin = require('html-webpack-plugin');
 //https://github.com/jantimon/html-webpack-plugin/issues/133
 var indexHtmlWebpackPlugin = new HtmlWebpackPlugin({
     filename: './index.html',
-    template: '!!html-loader!./src/core/template.html',
+    template: '!!html-loader!./src/template.html',
     hash: false,
     inject: 'body',
     // chunks: ["runtime", "globe", "index"]
     chunks: ["index"]
 });
 
-var webappHtmlWebpackPlugin = new HtmlWebpackPlugin({
+/*var webappHtmlWebpackPlugin = new HtmlWebpackPlugin({
     filename: './webapp.html',
     template: '!!ejs-loader!./src/webapp/template.html',
     hash: false,
     inject: 'body',
     // chunks: ["runtime", "webapp", "globe"]
     chunks: ["webapp"]
-});
+});*/
 
 // var commonsChunkPlugin = new webpack.optimize.CommonsChunkPlugin({
 //     // name: "globe",
@@ -45,9 +45,9 @@ var es6Promise = "./node_modules/es6-promise/dist/es6-promise.auto.min.js";
 
 module.exports = {
     entry: {
-        // globe: "./src/core/world/Globe.ts",
-        index: [es6Promise, "./src/core/index.ts"],
-        webapp: [es6Promise, "./src/webapp/index.jsx"]
+        // globe: "./src/world/Globe.ts",
+        index: [es6Promise, "./src/index.ts"]/*,
+        webapp: [es6Promise, "./src/webapp/index.jsx"]*/
     },
 
     output: {
@@ -66,9 +66,8 @@ module.exports = {
     resolve: {
         extensions: [".webpack.js", ".web.js", ".ts", ".tsx", ".js", ".jsx", ".scss", ".png"],
         alias: {
-            core: path.resolve(__dirname, "./src/core"),
-            world: path.resolve(__dirname, "./src/core/world"),
-            webapp: path.resolve(__dirname, "./src/webapp")
+            core: path.resolve(__dirname, "./src"),
+            world: path.resolve(__dirname, "./src/world")
         }
     },
 
@@ -127,8 +126,8 @@ module.exports = {
         // commonsChunkPlugin,
         extractPlugin,
         webpackMd5HashPlugin,
-        indexHtmlWebpackPlugin,
-        webappHtmlWebpackPlugin
+        indexHtmlWebpackPlugin/*,
+        webappHtmlWebpackPlugin*/
     ]
 };
 
