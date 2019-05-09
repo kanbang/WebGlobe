@@ -12,11 +12,9 @@ import LabelLayer from './layers/LabelLayer';
 import TrafficLayer from './layers/TrafficLayer';
 // import { QihuTrafficLayer } from './layers/Qihu';
 import Atmosphere from './graphics/Atmosphere';
-import LocationGraphic from './graphics/LocationGraphic';
 import PoiLayer from './layers/PoiLayer';
 import RouteLayer from './layers/RouteLayer';
 import Extent from './Extent';
-import Service,{Location} from './Service';
 import { WebGLRenderingContextExtension } from './Definitions.d';
 import { devicePixelRatio } from './Env';
 
@@ -44,7 +42,7 @@ export default class Globe {
   trafficLayer: TrafficLayer = null;
   poiLayer: PoiLayer = null;
   routeLayer: RouteLayer = null;
-  locationGraphic: LocationGraphic = null;
+  //locationGraphic: LocationGraphic = null;
   debugStopRefreshTiles: boolean = false;
   private readonly REFRESH_INTERVAL: number = 150; //Globe自动刷新时间间隔，以毫秒为单位
   private lastRefreshTimestamp: number = -1;
@@ -94,38 +92,14 @@ export default class Globe {
       this._setTiledLayer(new AutonaviTiledLayer(), this.options.pauseRendering);
     }
 
-    // this.trafficLayer = new QihuTrafficLayer();
-    // this.trafficLayer.visible = false;
-    // this.scene.add(this.trafficLayer);
     var atmosphere = Atmosphere.getInstance();
     this.scene.add(atmosphere);
-    this.routeLayer = RouteLayer.getInstance(this.camera, this.options.key);
-    this.scene.add(this.routeLayer);
-    this.poiLayer = PoiLayer.getInstance();
-    this.poiLayer.globe = this;
-    this.scene.add(this.poiLayer);
-    this.locationGraphic = LocationGraphic.getInstance(this);
-    this.scene.add(this.locationGraphic);
 
     this.eventHandler = new EventHandler(this);
 
     if(this.options.pauseRendering !== true){
       this.renderer.resumeRendering();
     }
-
-    const locationCallback = (location: any) => {
-      if(location){
-        this.afterRenderCallbacks.push(() => {
-          this.updateUserLocation(location);
-        });
-      }
-    };
-
-    Service.getCurrentPosition(false).then(locationCallback).then(() => {
-      if(Utils.isMobile()){
-        Service.getCurrentPosition(true).then(locationCallback);
-      }
-    });
   }
 
   placeAt(container: HTMLElement){
@@ -161,32 +135,6 @@ export default class Globe {
     this.canvas.height = height * devicePixelRatio;
     this.canvas.style.width = `${width}px`;
     this.canvas.style.height = `${height}px`;
-  }
-
-  private updateUserLocation(location: Location) {
-    this.locationGraphic.setLonLat(location.lon, location.lat);
-
-    let [lon, lat] = this.camera.getLonlat();
-
-    if(this.options.lonlat === 'auto'){
-      lon = location.lon;
-      lat = location.lat;
-    }
-
-    let level = this.getLevel();
-
-    if(this.options.level === 'auto'){
-      level = 8;
-      if (location.accuracy <= 100) {
-        level = 16;
-      } else if (location.accuracy <= 1000) {
-        level = 13;
-      } else {
-        level = 11;
-      }
-    }
-
-    this.centerTo(lon, lat, level);
   }
 
   getLonlat(){

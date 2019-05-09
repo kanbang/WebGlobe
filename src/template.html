@@ -62,8 +62,8 @@
     window.onload = () => {
       var options = new WebGlobe.GlobeOptions();
       options.satellite = true;
-      options.level = 3;
-      options.lonlat = 'auto';
+      options.level = 12;
+      options.lonlat = [114.31355197947526, 30.55384500782479];
       var globe = WebGlobe.Globe.getInstance(options);
       globe.placeAt(document.body);
       window.globe = globe;
