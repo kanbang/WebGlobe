@@ -151,6 +151,9 @@ export default class Mesh extends Object3D {
 	}
 
 	calculateVBO(force:boolean = false) {
+		// kk
+		return;
+
 		if (!this.vbo || force) {
 			var vboData:number[] = [], vertex:MeshVertice;
 
@@ -172,7 +175,10 @@ export default class Mesh extends Object3D {
 	}
 
 	calculateIBO(force:boolean = false) {
-		if (!this.ibo || force) {
+			// kk
+			return;
+
+			if (!this.ibo || force) {
 			var iboData:number[] = [], triangle:Triangle;
 
 			for (var i = 0, length = this.triangles.length; i < length; i++) {
@@ -193,7 +199,10 @@ export default class Mesh extends Object3D {
 	}
 
 	calculateNBO(force:boolean = false) {
-		if (!this.nbo || force) {
+			// kk
+			return;
+
+			if (!this.nbo || force) {
 			var nboData:number[] = [], vertex:MeshVertice;
 
 			for (var i = 0, length = this.vertices.length; i < length; i++) {
@@ -214,7 +223,10 @@ export default class Mesh extends Object3D {
 	}
 
 	calculateUVBO(force:boolean = false) {
-		if (!this.uvbo || force) {
+			// kk
+			return;
+
+			if (!this.uvbo || force) {
 			var uvboData:number[] = [], vertex:MeshVertice;
 
 			for (var i = 0, length = this.vertices.length; i < length; i++) {
@@ -234,7 +246,10 @@ export default class Mesh extends Object3D {
 	}
 
 	calculateCBO(force:boolean = false) {
-		if (!this.cbo || force) {
+			// kk
+			return;
+
+			if (!this.cbo || force) {
 			var cboData:number[] = [], vertex:MeshVertice;
 
 			for (var i = 0, length = this.vertices.length; i < length; i++) {

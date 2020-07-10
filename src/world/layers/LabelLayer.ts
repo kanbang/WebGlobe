@@ -1,3 +1,11 @@
+/*
+ * @Descripttion: 
+ * @version: 0.x
+ * @Author: zhai
+ * @Date: 2020-07-10 09:49:39
+ * @LastEditors: zhai
+ * @LastEditTime: 2020-07-10 18:14:05
+ */ 
 import Kernel from '../Kernel';
 import Camera from '../Camera';
 import TileGrid from '../TileGrid';
@@ -13,7 +21,10 @@ abstract class LabelLayer extends SubTiledLayer {
     }
 
     onDraw(camera: Camera) {
-        var program = Tile.findProgram();
+     			// kk
+			return;
+ 
+            var program = Tile.findProgram();
         if (!program) {
             return;
         }

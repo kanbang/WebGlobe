@@ -1,4 +1,12 @@
-﻿import Kernel from './Kernel';
+﻿/*
+ * @Descripttion: 
+ * @version: 0.x
+ * @Author: zhai
+ * @Date: 2020-07-10 09:49:39
+ * @LastEditors: zhai
+ * @LastEditTime: 2020-07-10 17:10:20
+ */ 
+import Kernel from './Kernel';
 const maxBufferSize:number = 200;
 const buffers:WebGLBuffer[] = [];
 
@@ -9,6 +17,10 @@ export default class VertexBufferObject{
 		//target: ARRAY_BUFFER or ELEMENT_ARRAY_BUFFER
 		//ARRAY_BUFFER用于存储实际的顶点数据，使用Float32Array存储数据，例如VBO、CBO、UVBO、NBO分别存储位置、颜色、纹理坐标、向量
 		//ELEMENT_ARRAY_BUFFER用于索引数据，使用Uint16Array存储数据，例如IBO
+	
+		// kk
+		return;
+
 		if(buffers.length > 0){
 			// console.info("reuse WebGLBuffer");
 		  	this.buffer = buffers.pop();
@@ -19,6 +31,8 @@ export default class VertexBufferObject{
 	}
 
 	bind(){
+		return;
+
 		Kernel.gl.bindBuffer(this.target, this.buffer);
 	}
 
@@ -27,6 +41,8 @@ export default class VertexBufferObject{
 	// }
 
 	bufferData(data: number[], usage: number, hasBinded: boolean = false){
+		return;
+
 		if(!hasBinded){
 			this.bind();
 		}
@@ -41,6 +57,8 @@ export default class VertexBufferObject{
 	}
 
 	destroy(){
+		return;
+		
 		if(this.buffer){
 			if(buffers.length < maxBufferSize){
 				buffers.push(this.buffer);

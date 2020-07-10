@@ -12,7 +12,7 @@ export default class MeshTextureMaterial extends Material {
 
     constructor(imageOrUrl: ImageType = null, public flipY: boolean = false) {
         super();
-        this.texture = Kernel.gl.createTexture();
+        // this.texture = Kernel.gl.createTexture();
         if (imageOrUrl) {
             this.setImageOrUrl(imageOrUrl);
         }
@@ -61,6 +61,13 @@ export default class MeshTextureMaterial extends Material {
         if (this.deleted) {
             return;
         }
+
+        // debugger
+
+        // kk
+        this.ready = true;
+
+        return;
 
         var gl = Kernel.gl;
 
@@ -133,7 +140,7 @@ export default class MeshTextureMaterial extends Material {
         //     gl.deleteTexture(this.texture);
         // }
         if (this.texture) {
-            gl.deleteTexture(this.texture);
+            // gl.deleteTexture(this.texture);
         }
         if (this.image && !this.ready) {
             // console.log(`Cancel load image ${this.image.src}`);

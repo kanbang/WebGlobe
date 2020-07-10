@@ -1,4 +1,13 @@
-import {WebGLRenderingContextExtension} from './Definitions';
+/*
+ * @Descripttion: 
+ * @version: 0.x
+ * @Author: zhai
+ * @Date: 2020-07-10 09:49:39
+ * @LastEditors: zhai
+ * @LastEditTime: 2020-07-10 10:20:43
+ */
+import { WebGLRenderingContextExtension } from './Definitions';
+import Baby from './Baby';
 
 const REAL_EARTH_RADIUS = 6378137;//meters
 const EARTH_RADIUS = 500;
@@ -7,7 +16,8 @@ const MAX_PROJECTED_COORD = Math.PI * EARTH_RADIUS;
 const MAX_REAL_RESOLUTION = 156543.03392800014;
 const MAX_RESOLUTION = MAX_REAL_RESOLUTION * SCALE_FACTOR;
 
-export default class Kernel{
+export default class Kernel {
+    static baby: Baby = null;
     static gl: WebGLRenderingContextExtension = null;
     static idCounter: number = 0;
     static readonly version: string = "0.6.3";

@@ -15,13 +15,18 @@ export default class Renderer {
     private onAfterRender?: (renderer: Renderer) => void
   ) {
 
-    this.gl = this._getWebGLContext(this.canvas);
+    this.gl = Kernel.baby.engine._gl as WebGLRenderingContextExtension;
+
+    // this.gl = this._getWebGLContext(this.canvas);
 
     Kernel.gl = this.gl;
 
-    if(!this.gl){
+    if (!this.gl) {
       console.debug("浏览器不支持WebGL或将WebGL禁用!");
     }
+
+    //kk
+    return;
 
     const gl = this.gl;
 
@@ -61,42 +66,62 @@ export default class Renderer {
   }
 
   render(scene: Scene, camera: Camera) {
+
+    // kk
+
+    try {
+      if (this.onBeforeRender) {
+        this.onBeforeRender(this);
+      }
+    } catch (e) {
+      console.error(e);
+    }
+
+    try {
+      if (!this.renderingPaused) {
+        scene.draw(camera);
+      }
+    } catch (e) {
+      console.error(e);
+    }
+    return;
+
     const gl = this.gl;
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
     gl.clearColor(0, 0, 0, 1);
     // gl.enable(gl.DEPTH_TEST);
     // gl.depthFunc(gl.LEQUAL);
     // gl.depthMask(true);
-    
+
     //如果refresh方法出现异常而且没有捕捉，那么就会导致无法继续设置setTimeout，从而无法进一步更新切片
 
-    try{
+    try {
       camera.update();
-    }catch(e){
+    } catch (e) {
       console.error(e);
     }
 
-    try{
+    try {
       if (this.onBeforeRender) {
         this.onBeforeRender(this);
       }
-    }catch(e){
+    } catch (e) {
       console.error(e);
     }
 
-    try{
-      if(!this.renderingPaused){
+    try {
+      if (!this.renderingPaused) {
         scene.draw(camera);
       }
-    }catch(e){
+    } catch (e) {
       console.error(e);
     }
 
-    try{
+    try {
       if (this.onAfterRender) {
         this.onAfterRender(this);
       }
-    }catch(e){
+    } catch (e) {
       console.error(e);
     }
   }
@@ -121,15 +146,15 @@ export default class Renderer {
     window.requestAnimationFrame(this._tick.bind(this));
   }
 
-  isRenderingPaused(){
+  isRenderingPaused() {
     return this.renderingPaused;
   }
 
-  pauseRendering(){
+  pauseRendering() {
     this.renderingPaused = true;
   }
 
-  resumeRendering(){
+  resumeRendering() {
     this.renderingPaused = false;
     this._tick();
   }

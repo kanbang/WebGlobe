@@ -59,7 +59,10 @@ export default class MultiPointsGraphic extends Graphic {
   }
 
   onDraw(camera: Camera) {
-    const gl = Kernel.gl;
+  			// kk
+        return;
+ 
+        const gl = Kernel.gl;
 
     gl.disable(Kernel.gl.DEPTH_TEST);
     gl.depthMask(false);

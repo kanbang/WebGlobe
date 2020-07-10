@@ -7,7 +7,7 @@ import MeshVertice from '../geometries/MeshVertice';
 import Mesh from '../geometries/Mesh';
 import Graphic from '../graphics/Graphic';
 import MeshTextureGraphic from '../graphics/MeshTextureGraphic';
-import GraphicGroup,{PickableGraphicGroup} from '../GraphicGroup';
+import GraphicGroup, { PickableGraphicGroup } from '../GraphicGroup';
 import MeshTextureMaterial from '../materials/MeshTextureMaterial';
 import Service, { Location, SearchType } from '../Service';
 import Globe from '../Globe';
@@ -24,7 +24,7 @@ export default class PoiLayer extends PickableGraphicGroup<MeshTextureGraphic>{
   private currentHighLightPoi: MeshTextureGraphic = null;
   private highlightListener: HighlightListener = null;
   private unHighlightListener: UnHighlightListener = null;
-  
+
   //icons.png的尺寸是874X524
   private readonly iconsWidth = 874;
   private readonly iconsHeight = 524;
@@ -60,7 +60,7 @@ export default class PoiLayer extends PickableGraphicGroup<MeshTextureGraphic>{
   //在屏幕上绘制的时候POI的像素大小，宽高比需要和validPinIconHeight/validPinIconWidth保持一致
   private readonly poiPixelWidth = 30;
   private readonly poiPixelHeight = 42;
-  
+
   private constructor() {
     super();
     Utils.subscribe('extent-change', () => {
@@ -80,7 +80,7 @@ export default class PoiLayer extends PickableGraphicGroup<MeshTextureGraphic>{
       }
     });
     this.setPickListener((target: MeshTextureGraphic) => {
-      if(this.currentHighLightPoi !== target){
+      if (this.currentHighLightPoi !== target) {
         this.unHighlightPoi();
         this.highlightPoi(target);
       }
@@ -96,54 +96,54 @@ export default class PoiLayer extends PickableGraphicGroup<MeshTextureGraphic>{
    * @param row 0 based
    * @param column 0 based
    */
-  private _getUV(row: number, column: number):number[][]{
+  private _getUV(row: number, column: number): number[][] {
     const smallV = this.pinIconDeltaV * row + this.validPinIconOffsetV;
     const bigV = smallV + this.validPinIconDeltaV;
     const smallU = this.pinIconDeltaU * column + this.validPinIconOffsetU;
     const bigU = smallU + this.validPinIconDeltaU;
-    const v0:number[] = [smallU, smallV];//左上
-    const v1:number[] = [smallU, bigV];//左下
-    const v2:number[] = [bigU, smallV];//右上
-    const v3:number[] = [bigU, bigV];//右下
+    const v0: number[] = [smallU, smallV];//左上
+    const v1: number[] = [smallU, bigV];//左下
+    const v2: number[] = [bigU, smallV];//右上
+    const v3: number[] = [bigU, bigV];//右下
     return [v0, v1, v2, v3];
   }
 
-  getHighlightPoi(){
+  getHighlightPoi() {
     return this.currentHighLightPoi;
   }
 
-  highlightPoi(target: MeshTextureGraphic){
-    if(this.currentHighLightPoi === target){
+  highlightPoi(target: MeshTextureGraphic) {
+    if (this.currentHighLightPoi === target) {
       return;
     }
     this.unHighlightPoi();
     this.currentHighLightPoi = target;
     this._updateMaterial(this.currentHighLightPoi, this.highLightMaterialRow);
     this.moveChildToLastPosition(this.currentHighLightPoi);
-    if(this.highlightListener){
+    if (this.highlightListener) {
       this.highlightListener(this.currentHighLightPoi);
     }
   }
 
-  unHighlightPoi(){
-    if(this.currentHighLightPoi){
+  unHighlightPoi() {
+    if (this.currentHighLightPoi) {
       this._updateMaterial(this.currentHighLightPoi, this.normalMaterialRow);
       this.currentHighLightPoi = null;
-      if(this.unHighlightListener){
+      if (this.unHighlightListener) {
         this.unHighlightListener();
       }
     }
   }
 
-  setHighlightListener(listener: HighlightListener){
+  setHighlightListener(listener: HighlightListener) {
     this.highlightListener = listener;
   }
 
-  setUnHighlightListener(listener: UnHighlightListener){
+  setUnHighlightListener(listener: UnHighlightListener) {
     this.unHighlightListener = listener;
   }
 
-  private _updateMaterial(target: MeshTextureGraphic, row: number){
+  private _updateMaterial(target: MeshTextureGraphic, row: number) {
     const columnIndex = (target as any).columnIndex;
     const uv = this._getUV(row, columnIndex);
     const [vLeftTop, vLeftBottom, vRightTop, vRightBottom] = target.geometry.vertices;
@@ -158,7 +158,9 @@ export default class PoiLayer extends PickableGraphicGroup<MeshTextureGraphic>{
     return this.globe && this.globe.camera.isEarthFullOverlapScreen() && super.shouldDraw();
   }
 
-  onBeforeDraw(){
+  onBeforeDraw() {
+    // kk
+    return;
     const gl = Kernel.gl;
     gl.disable(gl.DEPTH_TEST);
     // gl.depthMask(false);
@@ -166,7 +168,9 @@ export default class PoiLayer extends PickableGraphicGroup<MeshTextureGraphic>{
     gl.blendFunc(Kernel.gl.SRC_ALPHA, Kernel.gl.ONE_MINUS_SRC_ALPHA);
   }
 
-  onAfterDraw(){
+  onAfterDraw() {
+    // kk
+    return;
     const gl = Kernel.gl;
     gl.enable(gl.DEPTH_TEST);
     // gl.depthMask(true);
@@ -178,7 +182,7 @@ export default class PoiLayer extends PickableGraphicGroup<MeshTextureGraphic>{
     super.destroy();
   }
 
-  clear(){
+  clear() {
     this.currentHighLightPoi = null;
     super.clear();
   }
@@ -250,7 +254,7 @@ export default class PoiLayer extends PickableGraphicGroup<MeshTextureGraphic>{
       return;
     }
 
-    if(pois.length > this.MAX_POI_COUNT){
+    if (pois.length > this.MAX_POI_COUNT) {
       pois = pois.slice(0, this.MAX_POI_COUNT);
     }
 

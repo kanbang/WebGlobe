@@ -41,6 +41,9 @@ export default class Program {
 	}
 
 	use() {
+		// kk
+		return;
+
 		if (this.ready && Program.currentProgram !== this) {
 			Kernel.gl.useProgram(this.program);
 			Program.currentProgram = this;
@@ -59,6 +62,9 @@ export default class Program {
 	}
 
 	updateActiveUniformInfos() {
+					// kk
+					return;
+	
 		var count = Kernel.gl.getProgramParameter(this.program, Kernel.gl.ACTIVE_UNIFORMS);
 
 		for (var i = 0, activeInfo: any; i < count; i++) {
@@ -122,6 +128,11 @@ export default class Program {
 	}
 
 	enableVertexAttribArray(name: string) {
+				// kk
+				return;
+		
+
+
 		var activeInfo = this.activeInfosObject[name];
 		if (activeInfo && activeInfo.isAttribute && activeInfo.isEnabled !== true) {
 			var loc = activeInfo.loc;
@@ -131,6 +142,10 @@ export default class Program {
 	}
 
 	disableVertexAttribArray(name: string) {
+				// kk
+				return;
+		
+
 		var activeInfo = this.activeInfosObject[name];
 		if (activeInfo && activeInfo.isAttribute && activeInfo.isEnabled !== false) {
 			var loc = activeInfo.loc;
@@ -140,7 +155,11 @@ export default class Program {
 	}
 
 	_init() {
-		var vs = this._getShader(Kernel.gl.VERTEX_SHADER, this.vs);
+			// kk
+			this.ready = true;
+			return;
+		
+			var vs = this._getShader(Kernel.gl.VERTEX_SHADER, this.vs);
 		if (!vs) {
 			return;
 		}
@@ -170,6 +189,9 @@ export default class Program {
 	}
 
 	_getShader(shaderType: number, shaderText: string) {
+			// kk
+			return;
+	
 		var shader = Kernel.gl.createShader(shaderType);
 		Kernel.gl.shaderSource(shader, shaderText);
 		Kernel.gl.compileShader(shader);

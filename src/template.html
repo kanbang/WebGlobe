@@ -1,4 +1,12 @@
-﻿<!DOCTYPE html>
+﻿<!--
+ * @Descripttion: 
+ * @version: 0.x
+ * @Author: zhai
+ * @Date: 2020-07-10 09:49:39
+ * @LastEditors: zhai
+ * @LastEditTime: 2020-07-10 18:39:04
+--> 
+<!DOCTYPE html>
 <html>
 
 <head>
@@ -62,7 +70,8 @@
     window.onload = () => {
       var options = new WebGlobe.GlobeOptions();
       options.satellite = true;
-      options.level = 12;
+      // options.level = 12; kk
+      options.level = 5;
       options.lonlat = [114.31355197947526, 30.55384500782479];
       var globe = WebGlobe.Globe.getInstance(options);
       globe.placeAt(document.body);

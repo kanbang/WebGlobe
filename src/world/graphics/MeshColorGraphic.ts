@@ -73,7 +73,10 @@ export default class MeshColorGraphic extends Graphic {
     }
 
     protected onDraw(camera: Camera) {
-        var gl = Kernel.gl;
+       			// kk
+			return;
+ 
+            var gl = Kernel.gl;
 
         this.updateShaderUniforms(camera);
 

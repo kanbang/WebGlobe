@@ -1,4 +1,12 @@
-﻿import Kernel from '../Kernel';
+﻿/*
+ * @Descripttion: 
+ * @version: 0.x
+ * @Author: zhai
+ * @Date: 2020-07-10 09:49:39
+ * @LastEditors: zhai
+ * @LastEditTime: 2020-07-10 18:17:50
+ */ 
+import Kernel from '../Kernel';
 import {Drawable, Attributes} from '../Definitions.d';
 import Geometry from '../geometries/Geometry';
 import Material from '../materials/Material';
@@ -34,7 +42,7 @@ abstract class Graphic implements Drawable{
 
     draw(camera: Camera){
         if(this.shouldDraw(camera)){
-            this.program.use();
+            // this.program.use();
             this.onDraw(camera);
         }
     }

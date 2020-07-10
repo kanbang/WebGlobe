@@ -39,32 +39,31 @@ module.exports = {
     }
   },
   module: {
-    rules: [
-      {
+    rules: [{
         test: /\.tsx?$/,
         use: {
-            loader: "ts-loader"
+          loader: "ts-loader"
         }
       },
       {
         test: /\.(png|jpeg|jpg|gif)$/,
         use: {
-            loader: "file-loader"
+          loader: "file-loader"
         }
       },
       {
         test: /\.(otf|ttf|eot|woff|woff2).*/,
         use: {
-            loader: "file-loader"
+          loader: "file-loader"
         }
       },
       {
         test: /\.html$/,
         use: {
-            loader: "html-loader",
-            options: {
-                attrs: ['img:src']
-            }
+          loader: "html-loader",
+          options: {
+            attrs: ['img:src']
+          }
         }
       }
     ]
@@ -83,10 +82,13 @@ if (PRODUCTION) {
         NODE_ENV: JSON.stringify('production')
       }
     }),
-    new webpack.optimize.UglifyJsPlugin({
-      sourceMap: false
-    })
+    // new webpack.optimize.UglifyJsPlugin({
+    //   sourceMap: false
+    // })
+
+    // config.optimization.minimize
   );
+
 } else {
   module.exports.devServer = {
     contentBase: './dist',

@@ -1,3 +1,11 @@
+/*
+ * @Descripttion: 
+ * @version: 0.x
+ * @Author: zhai
+ * @Date: 2020-07-10 09:49:39
+ * @LastEditors: zhai
+ * @LastEditTime: 2020-07-10 18:12:01
+ */ 
 declare function require(name: string): any;
 import Kernel from '../Kernel';
 import MeshTextureGraphic from './MeshTextureGraphic';
@@ -25,10 +33,10 @@ export default class Atmosphere extends MeshTextureGraphic {
 
     onDraw(camera: Camera){
         var gl = Kernel.gl;
-        gl.disable(Kernel.gl.DEPTH_TEST);
-        gl.depthMask(false);
-        gl.enable(Kernel.gl.BLEND);
-        gl.blendFunc(Kernel.gl.SRC_ALPHA, Kernel.gl.ONE_MINUS_SRC_ALPHA);
+        // gl.disable(Kernel.gl.DEPTH_TEST);
+        // gl.depthMask(false);
+        // gl.enable(Kernel.gl.BLEND);
+        // gl.blendFunc(Kernel.gl.SRC_ALPHA, Kernel.gl.ONE_MINUS_SRC_ALPHA);
 
         this.geometry.getMatrix().setUnitMatrix();
 
@@ -51,8 +59,8 @@ export default class Atmosphere extends MeshTextureGraphic {
 
         super.onDraw(camera);
 
-        gl.enable(Kernel.gl.DEPTH_TEST);
-        gl.depthMask(true);
-        gl.disable(Kernel.gl.BLEND);
+        // gl.enable(Kernel.gl.DEPTH_TEST);
+        // gl.depthMask(true);
+        // gl.disable(Kernel.gl.BLEND);
     }
 };

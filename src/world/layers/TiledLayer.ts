@@ -170,6 +170,12 @@ abstract class TiledLayer extends GraphicGroup<SubTiledLayer> {
     if(!gl){
       return;
     }
+
+
+    // kk
+    super.onDraw(camera);
+    return;
+
     var program = Tile.findProgram();
     if (!program) {
       return;

@@ -18,13 +18,15 @@ import Extent from './Extent';
 import { WebGLRenderingContextExtension } from './Definitions.d';
 import { devicePixelRatio } from './Env';
 
-const initLevel:number = Utils.isMobile() ? 11 : 3;
+import Baby from './Baby';
 
-const initLonlat:number[] = [116.3975, 39.9085];
+const initLevel: number = Utils.isMobile() ? 11 : 3;
+
+const initLonlat: number[] = [116.3975, 39.9085];
 
 type RenderCallback = () => void;
 
-export class GlobeOptions{
+export class GlobeOptions {
   pauseRendering: boolean = false;
   satellite: boolean = true;
   level: number | 'auto' = 'auto';
@@ -34,6 +36,9 @@ export class GlobeOptions{
 }
 
 export default class Globe {
+  baby: Baby = null;
+
+
   renderer: Renderer = null;
   scene: Scene = null;
   camera: Camera = null;
@@ -57,8 +62,8 @@ export default class Globe {
   public gl: WebGLRenderingContextExtension = null;
   private static globe: Globe = null;
 
-  static getInstance(options?: GlobeOptions){
-    if(!this.globe){
+  static getInstance(options?: GlobeOptions) {
+    if (!this.globe) {
       const canvas = document.createElement("canvas");
       const width: number = document.documentElement.clientWidth;
       const height: number = document.documentElement.clientHeight;
@@ -68,7 +73,13 @@ export default class Globe {
   }
 
   private constructor(public canvas: HTMLCanvasElement, width: number, height: number, private options?: GlobeOptions) {
-    if(!this.options){
+    this.baby = new Baby(canvas);
+    Kernel.baby = this.baby;
+
+
+    // return;
+
+    if (!this.options) {
       this.options = new GlobeOptions();
     }
     this.resizeCanvas(width, height);
@@ -82,13 +93,23 @@ export default class Globe {
     this.renderer.setScene(this.scene);
     this.renderer.setCamera(this.camera);
 
-    if(this.options.satellite){
+    var cameraPositon = this.camera.getPosition(); //摄像机的世界坐标
+
+
+    this.baby.scene.registerBeforeRender(()=>{
+
+      // this.camera.
+
+    })
+
+
+    if (this.options.satellite) {
       //not display well for level 10,11 when style is Default
       this._setTiledLayer(new GoogleTiledLayer("Default"), this.options.pauseRendering);//"Default" | "Satellite" | "Road" | "RoadOnly" | "Terrain" | "TerrainOnly";
       // this.labelLayer = new AutonaviLabelLayer();
       // this.labelLayer = new SosoLabelLayer();
       // this.scene.add(this.labelLayer);
-    }else{
+    } else {
       this._setTiledLayer(new AutonaviTiledLayer(), this.options.pauseRendering);
     }
 
@@ -97,17 +118,17 @@ export default class Globe {
 
     this.eventHandler = new EventHandler(this);
 
-    if(this.options.pauseRendering !== true){
+    if (this.options.pauseRendering !== true) {
       this.renderer.resumeRendering();
     }
   }
 
-  placeAt(container: HTMLElement){
-    if(this.canvas.parentNode){
-      if(this.canvas.parentNode !== container){
+  placeAt(container: HTMLElement) {
+    if (this.canvas.parentNode) {
+      if (this.canvas.parentNode !== container) {
         container.appendChild(this.canvas);
       }
-    }else{
+    } else {
       container.appendChild(this.canvas);
     }
   }
@@ -119,8 +140,8 @@ export default class Globe {
   public getHeight() {
     return this.height;
   }
-  
-  public resize(width: number, height: number){
+
+  public resize(width: number, height: number) {
     this.resizeCanvas(width, height);
     this.renderer.updateViewportSize();
     // this.camera.setAspect(width / height);
@@ -137,19 +158,19 @@ export default class Globe {
     this.canvas.style.height = `${height}px`;
   }
 
-  getLonlat(){
+  getLonlat() {
     return this.camera.getLonlat();
   }
 
-  isRenderingPaused(){
+  isRenderingPaused() {
     return this.renderer.isRenderingPaused();
   }
 
-  pauseRendering(){
+  pauseRendering() {
     this.renderer.pauseRendering();
   }
 
-  resumeRendering(){
+  resumeRendering() {
     this.renderer.resumeRendering();
     this.refresh(true);
   }
@@ -167,7 +188,7 @@ export default class Globe {
     tiledLayer.globe = this;
     this.tiledLayer = tiledLayer;
     this.scene.add(this.tiledLayer, true);
-    if(!dontRefresh){
+    if (!dontRefresh) {
       this.refresh(true);
     }
   }
@@ -210,19 +231,19 @@ export default class Globe {
     }
   }
 
-  centerTo(lon: number, lat: number, level:number = this.getLevel()){
+  centerTo(lon: number, lat: number, level: number = this.getLevel()) {
     return this.camera.centerTo(lon, lat, level);
   }
 
-  animateTo(newLon: number, newLat: number, newLevel: number = this.getLevel(), duration: number = 1000){
+  animateTo(newLon: number, newLat: number, newLevel: number = this.getLevel(), duration: number = 1000) {
     return this.camera.animateTo(newLon, newLat, newLevel, duration);
   }
 
-  setExtent(extent: Extent){
+  setExtent(extent: Extent) {
     return this.camera.setExtent(extent);
   }
 
-  animateToExtent(extent: Extent, duration: number = 1000){
+  animateToExtent(extent: Extent, duration: number = 1000) {
     return this.camera.animateToExtent(extent, duration);
   }
 
@@ -287,10 +308,10 @@ export default class Globe {
     if (force) {
       isNeedRefresh = true;
     } else {
-      if(this.isRenderingPaused()){
+      if (this.isRenderingPaused()) {
         //when rendering paused, we don't need to refresh
         isNeedRefresh = false;
-      }else{
+      } else {
         if (newCameraCore.equals(this.lastRefreshCameraCore)) {
           isNeedRefresh = false;
         } else {
@@ -310,7 +331,7 @@ export default class Globe {
 
     this.tiledLayer.updateTileVisibility();
 
-    if(!this.isRenderingPaused()){
+    if (!this.isRenderingPaused()) {
       var a = !!(this.labelLayer && this.labelLayer.visible);
       var b = !!(this.trafficLayer && this.trafficLayer.visible);
       if (a || b) {
@@ -325,39 +346,39 @@ export default class Globe {
     }
   }
 
-  getExtent(){
-    const extents:Extent[] = [];
+  getExtent() {
+    const extents: Extent[] = [];
     //layerExtent is null when rendering paused
     var layerExtent = this.tiledLayer.getExtent();
-    if(layerExtent){
+    if (layerExtent) {
       extents.push(layerExtent);
     }
 
     var cameraExtent = this.camera.getExtent();
-    if(cameraExtent){
+    if (cameraExtent) {
       extents.push(cameraExtent);
     }
 
-    if(extents.length === 0){
-      return  null;
-    }else if(extents.length === 1){
+    if (extents.length === 0) {
+      return null;
+    } else if (extents.length === 1) {
       return extents[0];
-    }else{
+    } else {
       return Extent.intersect(extents);
     }
   }
 
-  pick(canvasX: number, canvasY: number){
+  pick(canvasX: number, canvasY: number) {
     const pickInfo = this.camera.getPickInfoByCanvas(canvasX, canvasY, false);
     const line = pickInfo.line;
     this.scene.pickByWorldLine(line);
   }
 
-  test(){
+  test() {
     this.debugStopRefreshTiles = true;
     this.labelLayer.hideAllTiles();
     this.tiledLayer.children.forEach((subLayer) => subLayer.hideAllTiles());
-    var subLayer = this.tiledLayer.children[this.tiledLayer.children.length-1];
+    var subLayer = this.tiledLayer.children[this.tiledLayer.children.length - 1];
     subLayer.visible = true;
     subLayer.children[0].visible = true;
     return subLayer;

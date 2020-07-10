@@ -1,3 +1,11 @@
+/*
+ * @Descripttion: 
+ * @version: 0.x
+ * @Author: zhai
+ * @Date: 2020-07-10 09:49:39
+ * @LastEditors: zhai
+ * @LastEditTime: 2020-07-10 18:12:59
+ */ 
 import Kernel from '../Kernel';
 import Program from '../Program';
 import Graphic from './Graphic';
@@ -47,7 +55,9 @@ export default class LineGraphic extends Graphic{
     }
 
     protected onDraw(camera: Camera){
-        const gl = Kernel.gl;
+      			// kk
+			return;
+            const gl = Kernel.gl;
 
         //uPMVMatrix
         var pmvMatrix = camera.getProjViewMatrixForDraw();//.multiplyMatrix(this.geometry.getMatrix());
