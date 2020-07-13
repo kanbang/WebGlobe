@@ -1,7 +1,16 @@
-import {Drawable, Pickable} from './Definitions.d';
+/*
+ * @Descripttion: 
+ * @version: 0.x
+ * @Author: zhai
+ * @Date: 2020-07-10 09:49:39
+ * @LastEditors: zhai
+ * @LastEditTime: 2020-07-13 18:16:16
+ */ 
+import {Pickable} from './Definitions.d';
 import GraphicGroup,{PickableGraphicGroup} from './GraphicGroup';
 import TiledLayer from './layers/TiledLayer';
 import Line from './math/Line';
+import { Drawable } from './graphics/Drawable';
 
 export default class Scene extends GraphicGroup<Drawable>{
     tiledLayer: TiledLayer;

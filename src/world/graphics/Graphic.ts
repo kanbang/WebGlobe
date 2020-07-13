@@ -4,33 +4,33 @@
  * @Author: zhai
  * @Date: 2020-07-10 09:49:39
  * @LastEditors: zhai
- * @LastEditTime: 2020-07-10 18:17:50
+ * @LastEditTime: 2020-07-13 18:30:21
  */ 
 import Kernel from '../Kernel';
-import {Drawable, Attributes} from '../Definitions.d';
+import {Attributes} from '../Definitions.d';
 import Geometry from '../geometries/Geometry';
 import Material from '../materials/Material';
 import Program from '../Program';
 import Camera from '../Camera';
 import GraphicGroup from '../GraphicGroup';
+import { Drawable } from './Drawable';
 
-abstract class Graphic implements Drawable{
+abstract class Graphic extends Drawable{
     id: number;
     visible: boolean = true;
     parent: GraphicGroup<Drawable>;
-    program: Program;
 
     constructor(public geometry: Geometry = null, public material: Material = null, public attributes: Attributes = null){
+        super();
+
         this.id = ++Kernel.idCounter;
         this.parent = null;
-        this.program = this.createProgram();
     }
 
     setVisible(visible: boolean){
         this.visible = visible;
     }
 
-    abstract createProgram(): Program
 
     isReady(): boolean{
         return !!(this.geometry && this.material && this.material.isReady());
@@ -39,15 +39,6 @@ abstract class Graphic implements Drawable{
     shouldDraw(camera: Camera): boolean{
         return this.visible && this.isReady();
     }
-
-    draw(camera: Camera){
-        if(this.shouldDraw(camera)){
-            // this.program.use();
-            this.onDraw(camera);
-        }
-    }
-
-    protected abstract onDraw(camera: Camera):void
 
     destroy(){
         this.parent = null;

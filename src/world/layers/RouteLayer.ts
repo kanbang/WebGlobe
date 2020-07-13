@@ -15,11 +15,11 @@ import MultiPointsGraphic from '../graphics/MultiPointsGraphic';
 // import Line from '../geometries/Line';
 // import LineGraphic from '../graphics/LineGraphic';
 import GraphicGroup from '../GraphicGroup';
-import { Drawable } from '../Definitions.d';
 import Camera from '../Camera';
 import Service from '../Service';
 import Extent from '../Extent';
 import Program from '../Program';
+import { Drawable } from '../graphics/Drawable';
 
 const startPointImageUrl = require('../images/start.png');
 const startPointImageSize = 80;
@@ -56,15 +56,15 @@ class MeshRouteGraphic extends MeshColorGraphic {
         this.setGeometry(geometry);
     }
 
-    private _removeDuplicatePoints(lonlats: number[][]){
+    private _removeDuplicatePoints(lonlats: number[][]) {
         let cursor: number = 0;
-        while(cursor <= (lonlats.length - 2)){
+        while (cursor <= (lonlats.length - 2)) {
             let currentLonlat = lonlats[cursor];
             let nextLonlat = lonlats[cursor + 1];
-            if(currentLonlat[0] === nextLonlat[0] && currentLonlat[1] === nextLonlat[1]){
+            if (currentLonlat[0] === nextLonlat[0] && currentLonlat[1] === nextLonlat[1]) {
                 //删除重复点，不移动游标
                 lonlats.splice(cursor + 1, 1);
-            }else{
+            } else {
                 //移动游标
                 cursor += 1;
             }
@@ -75,7 +75,7 @@ class MeshRouteGraphic extends MeshColorGraphic {
      * 
      * @param _lonlats 传入经纬度坐标数组，如果两条线段之间夹角大于一定角度，就认为是拐点，针对拐点生成贝塞尔曲线点，该方法不会修原数组
      */
-    private _handleCurveJoin(_lonlats: number[][], resolution: number, pixelWidth: number){
+    private _handleCurveJoin(_lonlats: number[][], resolution: number, pixelWidth: number) {
         //把所有的经纬度转换为WebMercator坐标，方便进行对拐点进行曲线拟合
         // var xyArr = lonlats.map((lonlat: number[]) => {
         //     MathUtils.degreeGeographicToWebMercator(lonlat[0], lonlat[1]);
@@ -89,7 +89,7 @@ class MeshRouteGraphic extends MeshColorGraphic {
         const offsetLonlat = MathUtils.radianToDegree(resolution * pixelWidth / Kernel.EARTH_RADIUS);
 
         //每次都要动态判断lonlats.length，因为lonlats的内容可能是在不断增加的
-        while(cursor <= (lonlats.length - 2)){
+        while (cursor <= (lonlats.length - 2)) {
             const currentLonlat = lonlats[cursor];
             const prevLonlat = lonlats[cursor - 1];
             const nextLonlat = lonlats[cursor + 1];
@@ -103,7 +103,7 @@ class MeshRouteGraphic extends MeshColorGraphic {
             //有可能nextPoint和currentPoint是相同的点，这样计算出的vector2长度为0，计算出的夹角为0
             const radian = Vector.getRadianOfTwoVectors(vector1, vector2);
             const angle = MathUtils.radianToDegree(radian);
-            if(angle > this.inflexionPointAngle){
+            if (angle > this.inflexionPointAngle) {
                 //currentLonlat是拐点，需要对拐点进行处理
                 let p0: number[] = null;//经纬度
                 let p1: number[] = currentLonlat;//经纬度
@@ -129,7 +129,7 @@ class MeshRouteGraphic extends MeshColorGraphic {
                 lonlats.splice(cursor, 1, ...curveLonlats);
                 //让游标指向下一个点
                 cursor += curveLonlats.length;
-            }else{
+            } else {
                 //让游标指向下一个点
                 cursor++;
             }
@@ -193,8 +193,8 @@ class MeshRouteGraphic extends MeshColorGraphic {
                 //     const prevPoint = points[index - 1];
                 //     startPoint.start2EndVector = prevPoint.start2EndVector;
                 // } else {
-                    const endPoint = points[index + 1];
-                    startPoint.start2EndVector = Vector.verticeMinusVertice(endPoint.vertice, startPoint.vertice);
+                const endPoint = points[index + 1];
+                startPoint.start2EndVector = Vector.verticeMinusVertice(endPoint.vertice, startPoint.vertice);
                 // }
             } else {
                 const prevPoint = points[index - 1];
@@ -381,7 +381,7 @@ export default class RouteLayer extends GraphicGroup<Drawable>{
                 this._showDrivingPath(pathIndex);
             } else if (this.route.type === 'bus') {
                 this._showBusPath(pathIndex);
-            } else if( this.route.type === 'walking'){
+            } else if (this.route.type === 'walking') {
                 this._showWalkingPath(pathIndex);
             }
         }
@@ -541,15 +541,15 @@ export default class RouteLayer extends GraphicGroup<Drawable>{
         }
     }
 
-    private _showStartEndPoints(){
-        if(this.startLonlat){
+    private _showStartEndPoints() {
+        if (this.startLonlat) {
             let material = new MarkerTextureMaterial(startPointImageUrl, startPointImageSize);
             let startPointGraphic = new MultiPointsGraphic(material);
             startPointGraphic.setLonlats([this.startLonlat]);
             this.add(startPointGraphic);
         }
 
-        if(this.endLonlat){
+        if (this.endLonlat) {
             let material = new MarkerTextureMaterial(endPointImageUrl, endPointImageSize);
             let endPointGraphic = new MultiPointsGraphic(material);
             endPointGraphic.setLonlats([this.endLonlat]);
@@ -564,7 +564,7 @@ export default class RouteLayer extends GraphicGroup<Drawable>{
         this.clear();
     }
 
-    protected onDraw(camera: Camera) {
+    public onDraw(camera: Camera) {
         const gl = Kernel.gl;
 
         // gl.disable(Kernel.gl.DEPTH_TEST);

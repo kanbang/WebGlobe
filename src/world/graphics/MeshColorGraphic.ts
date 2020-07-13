@@ -60,44 +60,41 @@ export default class MeshColorGraphic extends Graphic {
         return this.isGeometryReady() && super.isReady();
     }
 
-    createProgram(): Program{
-        return Program.getProgram(vs, fs);
-    }
 
     protected updateShaderUniforms(camera: Camera){
         //uPMVMatrix
-        var gl = Kernel.gl;
-        var pmvMatrix = camera.getProjViewMatrixForDraw().multiplyMatrix(this.geometry.getMatrix());
-        var locPMVMatrix = this.program.getUniformLocation('uPMVMatrix');
-        gl.uniformMatrix4fv(locPMVMatrix, false, pmvMatrix.getFloat32Array());
+        // var gl = Kernel.gl;
+        // var pmvMatrix = camera.getProjViewMatrixForDraw().multiplyMatrix(this.geometry.getMatrix());
+        // var locPMVMatrix = this.program.getUniformLocation('uPMVMatrix');
+        // gl.uniformMatrix4fv(locPMVMatrix, false, pmvMatrix.getFloat32Array());
     }
 
-    protected onDraw(camera: Camera) {
+    public onDraw(camera: Camera) {
        			// kk
 			return;
  
-            var gl = Kernel.gl;
+        //     var gl = Kernel.gl;
 
-        this.updateShaderUniforms(camera);
+        // this.updateShaderUniforms(camera);
 
-        //aPosition
-        var locPosition = this.program.getAttribLocation('aPosition');
-        this.program.enableVertexAttribArray('aPosition');
-        this.geometry.vbo.bind();
-        gl.vertexAttribPointer(locPosition, 3, Kernel.gl.FLOAT, false, 0, 0);
+        // //aPosition
+        // var locPosition = this.program.getAttribLocation('aPosition');
+        // this.program.enableVertexAttribArray('aPosition');
+        // this.geometry.vbo.bind();
+        // gl.vertexAttribPointer(locPosition, 3, Kernel.gl.FLOAT, false, 0, 0);
 
-        //aColor
-        var locColor = this.program.getAttribLocation('aColor');
-        this.program.enableVertexAttribArray('aColor');
-        this.geometry.cbo.bind();
-        gl.vertexAttribPointer(locColor, 3, Kernel.gl.FLOAT, false, 0, 0);
+        // //aColor
+        // var locColor = this.program.getAttribLocation('aColor');
+        // this.program.enableVertexAttribArray('aColor');
+        // this.geometry.cbo.bind();
+        // gl.vertexAttribPointer(locColor, 3, Kernel.gl.FLOAT, false, 0, 0);
 
-        //设置索引，但不用往shader中赋值
-        this.geometry.ibo.bind();
+        // //设置索引，但不用往shader中赋值
+        // this.geometry.ibo.bind();
 
-        //绘图
-        var count = this.geometry.triangles.length * 3;
-        gl.drawElements(Kernel.gl.TRIANGLES, count, Kernel.gl.UNSIGNED_SHORT, 0);
+        // //绘图
+        // var count = this.geometry.triangles.length * 3;
+        // gl.drawElements(Kernel.gl.TRIANGLES, count, Kernel.gl.UNSIGNED_SHORT, 0);
 
         //释放当前绑定对象
         // gl.bindBuffer(gl.ARRAY_BUFFER, null);

@@ -50,10 +50,6 @@ export default class MultiPointsGraphic extends Graphic {
     this.vertices = [];
   }
 
-  createProgram() {
-    return Program.getProgram(vs, fs);
-  }
-
   isReady(): boolean {
     return !!(this.vertices.length > 0 && this.material && this.material.isReady());
   }
@@ -62,49 +58,49 @@ export default class MultiPointsGraphic extends Graphic {
   			// kk
         return;
  
-        const gl = Kernel.gl;
+    //     const gl = Kernel.gl;
 
-    gl.disable(Kernel.gl.DEPTH_TEST);
-    gl.depthMask(false);
-    gl.enable(Kernel.gl.BLEND);
-    gl.blendFunc(Kernel.gl.SRC_ALPHA, Kernel.gl.ONE_MINUS_SRC_ALPHA);
+    // gl.disable(Kernel.gl.DEPTH_TEST);
+    // gl.depthMask(false);
+    // gl.enable(Kernel.gl.BLEND);
+    // gl.blendFunc(Kernel.gl.SRC_ALPHA, Kernel.gl.ONE_MINUS_SRC_ALPHA);
 
-    //aPosition
-    var locPosition = this.program.getAttribLocation('aPosition');
-    this.program.enableVertexAttribArray('aPosition');
-    this.vbo.bind();
-    var vertices: number[] = [];
-    this.vertices.map(function (vertice) {
-      vertices.push(vertice.x, vertice.y, vertice.z);
-    });
-    this.vbo.bufferData(vertices, Kernel.gl.DYNAMIC_DRAW, true);
-    gl.vertexAttribPointer(locPosition, 3, Kernel.gl.FLOAT, false, 0, 0);
+    // //aPosition
+    // var locPosition = this.program.getAttribLocation('aPosition');
+    // this.program.enableVertexAttribArray('aPosition');
+    // this.vbo.bind();
+    // var vertices: number[] = [];
+    // this.vertices.map(function (vertice) {
+    //   vertices.push(vertice.x, vertice.y, vertice.z);
+    // });
+    // this.vbo.bufferData(vertices, Kernel.gl.DYNAMIC_DRAW, true);
+    // gl.vertexAttribPointer(locPosition, 3, Kernel.gl.FLOAT, false, 0, 0);
 
-    //uPMVMatrix
-    var pmvMatrix = camera.getProjViewMatrixForDraw();
-    var locPMVMatrix = this.program.getUniformLocation('uPMVMatrix');
-    gl.uniformMatrix4fv(locPMVMatrix, false, pmvMatrix.getFloat32Array());
+    // //uPMVMatrix
+    // var pmvMatrix = camera.getProjViewMatrixForDraw();
+    // var locPMVMatrix = this.program.getUniformLocation('uPMVMatrix');
+    // gl.uniformMatrix4fv(locPMVMatrix, false, pmvMatrix.getFloat32Array());
 
-    //uSize
-    var locSize = this.program.getUniformLocation('uSize');
-    gl.uniform1f(locSize, this.material.size);
+    // //uSize
+    // var locSize = this.program.getUniformLocation('uSize');
+    // gl.uniform1f(locSize, this.material.size);
 
-    //set uSampler
-    var locSampler = this.program.getUniformLocation('uSampler');
-    gl.activeTexture(gl.TEXTURE0);
-    gl.bindTexture(gl.TEXTURE_2D, this.material.texture);
-    gl.uniform1i(locSampler, 0);
+    // //set uSampler
+    // var locSampler = this.program.getUniformLocation('uSampler');
+    // gl.activeTexture(gl.TEXTURE0);
+    // gl.bindTexture(gl.TEXTURE_2D, this.material.texture);
+    // gl.uniform1i(locSampler, 0);
 
-    //绘图,vertices.length / 3表示所绘点的个数
-    gl.drawArrays(gl.POINTS, 0, vertices.length / 3);
+    // //绘图,vertices.length / 3表示所绘点的个数
+    // gl.drawArrays(gl.POINTS, 0, vertices.length / 3);
 
-    //释放当前绑定对象
-    gl.enable(gl.DEPTH_TEST);
-    gl.depthMask(true);
-    gl.disable(gl.BLEND);
-    // gl.bindBuffer(gl.ARRAY_BUFFER, null);
-    // gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null);
-    // gl.bindTexture(gl.TEXTURE_2D, null);
+    // //释放当前绑定对象
+    // gl.enable(gl.DEPTH_TEST);
+    // gl.depthMask(true);
+    // gl.disable(gl.BLEND);
+    // // gl.bindBuffer(gl.ARRAY_BUFFER, null);
+    // // gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null);
+    // // gl.bindTexture(gl.TEXTURE_2D, null);
   }
 
   setLonlats(lonlats:number[][]){

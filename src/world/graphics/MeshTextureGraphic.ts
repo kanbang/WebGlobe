@@ -5,9 +5,10 @@ import Mesh from '../geometries/Mesh';
 import MeshTextureMaterial from '../materials/MeshTextureMaterial';
 import Camera from '../Camera';
 import Line from '../math/Line';
-import { Drawable, Pickable, Attributes } from '../Definitions.d';
+import { Pickable, Attributes } from '../Definitions.d';
 
 import * as BABYLON from "babylonjs"
+import { BabylonFileLoaderConfiguration } from 'babylonjs';
 
 
 const vs =
@@ -70,12 +71,26 @@ export default class MeshTextureGraphic extends Graphic implements Pickable {
 
         var length = this.geometry.vertices.length;
         vertexData.positions = new Float32Array(length * 3);
+        vertexData.normals = new Float32Array(length * 3);
+
+        vertexData.uvs = new Float32Array(length*2);
+
         for (var i = 0; i < length; i++) {
             var vertex = this.geometry.vertices[i];
             vertexData.positions[i * 3] = vertex.p[0];
             vertexData.positions[i * 3 + 1] = vertex.p[1];
             vertexData.positions[i * 3 + 2] = vertex.p[2];
+
+            // vertexData.normals[i * 3] = vertex.n[0];
+            // vertexData.normals[i * 3 + 1] = vertex.n[1];
+            // vertexData.normals[i * 3 + 2] = vertex.n[2];
+            
+            vertexData.uvs[i*2] = -vertex.uv[0];
+            vertexData.uvs[i*2+1] = vertex.uv[1];
+            console.log(vertex.uv);
         }
+
+        
 
         length = this.geometry.triangles.length;
         vertexData.indices = new Int32Array(length * 3);
@@ -85,6 +100,8 @@ export default class MeshTextureGraphic extends Graphic implements Pickable {
             vertexData.indices[i * 3 + 2] = triangle.v2.i;
             vertexData.indices[i * 3 + 1] = triangle.v3.i;
         }
+
+        
 
 
         var materialPlane = new BABYLON.StandardMaterial("texturePlane", scene);
@@ -107,12 +124,19 @@ export default class MeshTextureGraphic extends Graphic implements Pickable {
         // VertexData.ComputeNormals(geometry.vertices, geometry.indices, normals);
         // // BABYLON.VertexData._ComputeSides(BABYLON.Mesh.FRONTSIDE, geometry.vertices, geometry.indices, normals, uvs);
 
+        // 创建地面
+        var ground = BABYLON.Mesh.CreateGround('ground1', 1000, 1000, 2, scene);
+        ground.position.y = -1000 / 2;
+        ground.material = materialPlane;
 
         this.mesh = new BABYLON.Mesh("xbimmesh" + this.id, scene);
         this.mesh.material = materialPlane;
 
         //Apply vertexData to custom mesh
+
         vertexData.applyToMesh(this.mesh, true);
+        this.mesh.createNormals(true);
+
         console.log("**BabylonMesh: "
             , "id: ", this.id
             , "length: ", length
@@ -130,7 +154,7 @@ export default class MeshTextureGraphic extends Graphic implements Pickable {
 
     isReady(): boolean {
         // kk
-        return this.isGeometryReady();
+        // return this.isGeometryReady();
         return this.isGeometryReady() && super.isReady();
     }
 
@@ -138,9 +162,6 @@ export default class MeshTextureGraphic extends Graphic implements Pickable {
         return Program.findProgram(vs, fs);
     }
 
-    createProgram(): Program {
-        return Program.getProgram(vs, fs);
-    }
 
     protected updateShaderUniforms(camera: Camera) {
         //uPMVMatrix
@@ -149,17 +170,17 @@ export default class MeshTextureGraphic extends Graphic implements Pickable {
         // kk
         return;
 
-        var pmvMatrix = camera.getProjViewMatrixForDraw().multiplyMatrix(this.geometry.getMatrix());
-        var locPMVMatrix = this.program.getUniformLocation('uPMVMatrix');
-        gl.uniformMatrix4fv(locPMVMatrix, false, pmvMatrix.getFloat32Array());
+        // var pmvMatrix = camera.getProjViewMatrixForDraw().multiplyMatrix(this.geometry.getMatrix());
+        // var locPMVMatrix = this.program.getUniformLocation('uPMVMatrix');
+        // gl.uniformMatrix4fv(locPMVMatrix, false, pmvMatrix.getFloat32Array());
 
-        //uSampler
-        gl.activeTexture(Kernel.gl.TEXTURE0);
-        var locSampler = this.program.getUniformLocation('uSampler');
-        gl.uniform1i(locSampler, 0);
+        // //uSampler
+        // gl.activeTexture(Kernel.gl.TEXTURE0);
+        // var locSampler = this.program.getUniformLocation('uSampler');
+        // gl.uniform1i(locSampler, 0);
     }
 
-    protected onDraw(camera: Camera) {
+    onDraw(camera: Camera) {
 
 
         // debugger
@@ -168,34 +189,34 @@ export default class MeshTextureGraphic extends Graphic implements Pickable {
 
         return;
 
-        var gl = Kernel.gl;
+        // var gl = Kernel.gl;
 
-        this.updateShaderUniforms(camera);
+        // this.updateShaderUniforms(camera);
 
-        //aPosition
-        var locPosition = this.program.getAttribLocation('aPosition');
-        this.program.enableVertexAttribArray('aPosition');
-        this.geometry.vbo.bind();
-        //一个aPosition由3个Kernel.gl.FLOAT组成
-        gl.vertexAttribPointer(locPosition, 3, Kernel.gl.FLOAT, false, 0, 0);
+        // //aPosition
+        // var locPosition = this.program.getAttribLocation('aPosition');
+        // this.program.enableVertexAttribArray('aPosition');
+        // this.geometry.vbo.bind();
+        // //一个aPosition由3个Kernel.gl.FLOAT组成
+        // gl.vertexAttribPointer(locPosition, 3, Kernel.gl.FLOAT, false, 0, 0);
 
-        //set aUV
-        var locUV = this.program.getAttribLocation('aUV');
-        this.program.enableVertexAttribArray('aUV');
-        this.geometry.uvbo.bind();
-        //一个aUV由2个Kernel.gl.FLOAT组成
-        gl.vertexAttribPointer(locUV, 2, Kernel.gl.FLOAT, false, 0, 0);
+        // //set aUV
+        // var locUV = this.program.getAttribLocation('aUV');
+        // this.program.enableVertexAttribArray('aUV');
+        // this.geometry.uvbo.bind();
+        // //一个aUV由2个Kernel.gl.FLOAT组成
+        // gl.vertexAttribPointer(locUV, 2, Kernel.gl.FLOAT, false, 0, 0);
 
-        //set uSampler
-        gl.bindTexture(Kernel.gl.TEXTURE_2D, this.material.texture);
+        // //set uSampler
+        // gl.bindTexture(Kernel.gl.TEXTURE_2D, this.material.texture);
 
-        //设置索引，但不用往shader中赋值
-        this.geometry.ibo.bind();
+        // //设置索引，但不用往shader中赋值
+        // this.geometry.ibo.bind();
 
-        //绘图
-        var count = this.geometry.triangles.length * 3;
-        //count为所绘制的点的数量
-        gl.drawElements(Kernel.gl.TRIANGLES, count, Kernel.gl.UNSIGNED_SHORT, 0);
+        // //绘图
+        // var count = this.geometry.triangles.length * 3;
+        // //count为所绘制的点的数量
+        // gl.drawElements(Kernel.gl.TRIANGLES, count, Kernel.gl.UNSIGNED_SHORT, 0);
 
         //释放当前绑定对象
         // gl.bindBuffer(gl.ARRAY_BUFFER, null);

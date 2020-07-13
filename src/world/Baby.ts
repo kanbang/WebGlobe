@@ -4,7 +4,7 @@
  * @Author: zhai
  * @Date: 2020-07-10 10:11:33
  * @LastEditors: zhai
- * @LastEditTime: 2020-07-10 16:08:03
+ * @LastEditTime: 2020-07-13 17:24:45
  */
 
 
@@ -71,5 +71,6 @@ export default class Baby {
         var ground = BABYLON.Mesh.CreateGround('ground1', 100, 100, 2, this.scene);
         ground.position.y = -100 / 2;
 
+        this.scene.debugLayer.show();
     };
 };

@@ -1,15 +1,17 @@
 ﻿import Kernel from './Kernel';
-import {Drawable, Pickable, PickListener} from './Definitions.d';
+import { Pickable, PickListener } from './Definitions.d';
 import Camera from './Camera';
 import Line from './math/Line';
+import { Drawable } from './graphics/Drawable';
 
-class GraphicGroup<T extends Drawable> implements Drawable {
+class GraphicGroup<T extends Drawable> extends Drawable {
     id: number;
     parent: GraphicGroup<T>;
     children: T[];
     visible: boolean = true;
 
     constructor() {
+        super();
         this.id = ++Kernel.idCounter;
         this.children = [];
     }
@@ -34,7 +36,7 @@ class GraphicGroup<T extends Drawable> implements Drawable {
         // }
         // return result;
         const index = this.findChildIndex(g);
-        if(index >= 0){
+        if (index >= 0) {
             this.children.splice(index, 1);
             return true;
         }
@@ -55,11 +57,11 @@ class GraphicGroup<T extends Drawable> implements Drawable {
         this.clear();
     }
 
-    findChildIndex(child: T){
+    findChildIndex(child: T) {
         const count = this.children.length;
-        for(let i = 0; i < count; i++){
+        for (let i = 0; i < count; i++) {
             const g = this.children[i];
-            if(child === g){
+            if (child === g) {
                 return i;
             }
         }
@@ -84,35 +86,31 @@ class GraphicGroup<T extends Drawable> implements Drawable {
         return this.visible && this.children.length > 0;
     }
 
-    moveChildToLastPosition(child: T){
+    onDraw(camera: Camera) {
+        this.children.forEach(function (g: Drawable) {
+            g.draw(camera);
+        });
+    }
+
+    moveChildToLastPosition(child: T) {
         const index = this.findChildIndex(child);
         this.children.splice(index, 1);
         this.children.push(child);
     }
 
-    draw(camera: Camera) {
-        if (this.shouldDraw()) {
-            this.onBeforeDraw();
-            this.onDraw(camera);
-            this.onAfterDraw();
-        }
-    }
+    // draw(camera: Camera) {
+    //     if (this.shouldDraw()) {
 
-    protected onBeforeDraw(){
+    //         this.onBeforeDraw();
+    //         this.onDraw(camera);
+    //         this.onAfterDraw();
+    //     }
+    // }
 
-    }
 
-    protected onDraw(camera: Camera) {
-        this.children.forEach(function (g: Drawable) {
-            if (g.shouldDraw(camera)) {
-                g.draw(camera);
-            }
-        });
-    }
 
-    protected onAfterDraw(){
 
-    }
+
 };
 
 
@@ -120,12 +118,12 @@ class GraphicGroup<T extends Drawable> implements Drawable {
 export class PickableGraphicGroup<T extends Drawable & Pickable> extends GraphicGroup<T>{
     private pickListener: PickListener = null;
 
-    pickByLocalLine(localLine: Line, emitListener: boolean = false): T{
+    pickByLocalLine(localLine: Line, emitListener: boolean = false): T {
         const count = this.children.length;
-        for(let i = count - 1; i >= 0; i--){
+        for (let i = count - 1; i >= 0; i--) {
             const child = this.children[i];
-            if(child.ifIntersectLocalLine(localLine)){
-                if(emitListener){
+            if (child.ifIntersectLocalLine(localLine)) {
+                if (emitListener) {
                     this.onPick(child);
                 }
                 return child;
@@ -134,12 +132,12 @@ export class PickableGraphicGroup<T extends Drawable & Pickable> extends Graphic
         return null;
     }
 
-    pickByWorldLine(worldLine: Line, emitListener: boolean = false): T{
+    pickByWorldLine(worldLine: Line, emitListener: boolean = false): T {
         const count = this.children.length;
-        for(let i = count - 1; i >= 0; i--){
+        for (let i = count - 1; i >= 0; i--) {
             const child = this.children[i];
-            if(child.ifIntersectWorldLine(worldLine)){
-                if(emitListener){
+            if (child.ifIntersectWorldLine(worldLine)) {
+                if (emitListener) {
                     this.onPick(child);
                 }
                 return child;
@@ -148,19 +146,19 @@ export class PickableGraphicGroup<T extends Drawable & Pickable> extends Graphic
         return null;
     }
 
-    private onPick(target: T){
+    private onPick(target: T) {
         //将选中的child放到最后的位置以便于最后渲染，这样防止其他child对其遮挡
         this.moveChildToLastPosition(target);
-        if(this.pickListener){
+        if (this.pickListener) {
             this.pickListener(target);
         }
     }
 
-    hasPickListener(){
+    hasPickListener() {
         return !!this.pickListener;
     }
 
-    setPickListener(listener: PickListener){
+    setPickListener(listener: PickListener) {
         this.pickListener = listener;
     }
 }

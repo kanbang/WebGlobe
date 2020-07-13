@@ -1,10 +1,18 @@
+/*
+ * @Descripttion: 
+ * @version: 0.x
+ * @Author: zhai
+ * @Date: 2020-07-10 09:49:39
+ * @LastEditors: zhai
+ * @LastEditTime: 2020-07-13 18:02:51
+ */
 declare const Promise: any;
 import Line from './math/Line';
 import Matrix from './math/Matrix';
 import Camera from './Camera';
 import GraphicGroup from './GraphicGroup';
 
-interface WebGLProgramExtension extends WebGLProgram{
+interface WebGLProgramExtension extends WebGLProgram {
     uMVMatrix: WebGLUniformLocation;
     uPMatrix: WebGLUniformLocation;
     uSampler: WebGLUniformLocation;
@@ -13,11 +21,11 @@ interface WebGLProgramExtension extends WebGLProgram{
     aTextureCoord: number;
 }
 
-export interface WebGLRenderingContextExtension extends WebGLRenderingContext{
+export interface WebGLRenderingContextExtension extends WebGLRenderingContext {
     shaderProgram: WebGLProgramExtension;
 }
 
-export interface IMockCamera{
+export interface IMockCamera {
     fov: number;
     aspect: number;
     near: number;
@@ -27,30 +35,23 @@ export interface IMockCamera{
     equals(other: IMockCamera): boolean;
 }
 
-export interface Drawable{
-    id: number;
-    parent: GraphicGroup<Drawable>;
-    draw(camera: Camera): void;
-    shouldDraw(camera: Camera): boolean;
-    destroy(): void;
-}
 
-export interface Pickable{
+export interface Pickable {
     ifIntersectLocalLine(localLine: Line): boolean;
     ifIntersectWorldLine(worldLine: Line): boolean;
 }
 
 export type PickListener = (target: Pickable) => void;
 
-export interface CancelablePromise extends Promise<any>{
+export interface CancelablePromise extends Promise<any> {
     cancel: () => void;
 }
 
-export interface Destroyable{
+export interface Destroyable {
     destroy: () => void;
 }
 
-export interface Attributes{
+export interface Attributes {
     [key: string]: any
 }
 
